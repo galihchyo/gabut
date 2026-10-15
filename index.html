@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#08090d">
+<title>Sonora — Pilih Tampilan</title>
+<style>
+:root{color-scheme:dark;--text:#f5f5f7;--muted:#a1a1aa;--line:rgba(255,255,255,.12)}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;background:radial-gradient(ellipse at 15% 15%,rgba(54,90,140,.27),transparent 42%),radial-gradient(ellipse at 85% 85%,rgba(105,68,105,.23),transparent 40%),#08090d;color:var(--text)}
+#player{position:fixed;inset:0;width:100%;height:100%;border:0;display:none;background:#000}
+.choose{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:26px;overflow:auto}
+.content{width:min(850px,100%);margin:auto}
+.brand{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:30px;color:#e8e8ec;font-size:12px;letter-spacing:.24em;text-transform:uppercase}
+.brand-icon{width:35px;height:35px;border:1px solid #555762;border-radius:12px;display:grid;place-items:center;background:linear-gradient(145deg,#252832,#101116);font-size:17px;letter-spacing:0}
+h1{text-align:center;font-size:clamp(30px,5vw,48px);letter-spacing:-.045em;line-height:1.05;margin:0 0 13px;font-weight:720}
+.sub{text-align:center;color:var(--muted);font-size:15px;line-height:1.6;margin:0 auto 35px;max-width:480px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.card{appearance:none;text-align:left;border:1px solid var(--line);border-radius:24px;padding:13px;background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025));color:inherit;transition:transform .2s,border-color .2s,background .2s;cursor:pointer}
+.card:hover,.card:focus-visible{transform:translateY(-4px);border-color:rgba(255,255,255,.42);background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.04));outline:none}
+.preview{height:230px;border-radius:16px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:17px}
+.preview.wave{background:radial-gradient(ellipse at 50% 100%,#292929,transparent 65%),#050505}
+.preview.album{background:radial-gradient(ellipse at 15% 90%,#543b43,transparent 52%),radial-gradient(ellipse at 85% 5%,#2d4057,transparent 50%),linear-gradient(135deg,#29292e,#17171b)}
+.mock-phone{width:118px;height:190px;border:1px solid rgba(255,255,255,.22);border-radius:20px;background:rgba(0,0,0,.42);padding:13px 10px;box-shadow:0 14px 35px rgba(0,0,0,.35);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.cover{width:67px;height:67px;border-radius:13px;background:linear-gradient(135deg,#555b64,#17191f);display:grid;place-items:center;font-size:24px}
+.album .cover{background:linear-gradient(135deg,#ba8c8c,#3b4b61 55%,#17191e);box-shadow:0 5px 20px #0007}
+.lines{width:78%;display:grid;gap:5px}.lines i{height:4px;border-radius:8px;background:#aaa;opacity:.8}.lines i:last-child{width:58%;opacity:.4}
+.waveform{height:35px;display:flex;align-items:center;gap:3px}.waveform i{width:3px;border-radius:5px;background:#d9d9dc;height:var(--h);opacity:.85}
+.progress{width:82%;height:3px;background:#48484c;border-radius:4px;position:relative}.progress:before{content:"";position:absolute;left:0;top:0;bottom:0;width:46%;background:#e7e7ea;border-radius:4px}
+.controls{display:flex;align-items:center;gap:13px;color:#eee;font-size:12px}.controls b{font-size:19px}
+.info{padding:0 7px 8px}.tag{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:#a9abb5;margin-bottom:8px}
+.card h2{font-size:20px;letter-spacing:-.025em;margin:0 0 7px}.card p{font-size:13px;line-height:1.55;color:var(--muted);margin:0 0 15px;min-height:40px}
+.select{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:13px;font-size:13px;font-weight:600}.arrow{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:#f2f2f4;color:#111}
+.foot{text-align:center;color:#6f7079;font-size:11px;margin-top:24px}
+#switch{display:none}
+#homeGesture{display:none;position:fixed;z-index:20;left:0;right:0;bottom:0;height:34px;align-items:center;justify-content:center;background:linear-gradient(transparent,rgba(0,0,0,.18));touch-action:pan-x;cursor:pointer}
+#homeGesture .bar{width:min(31vw,238px);height:4px;border-radius:999px;background:#f5f5f7;box-shadow:0 1px 3px #0008}
+#homeGesture:active .bar{opacity:.7;transform:scaleX(.94)}
+@media(max-width:600px){.choose{padding:22px 17px}.brand{margin-bottom:22px}h1{font-size:32px}.sub{font-size:13px;margin-bottom:24px}.cards{grid-template-columns:1fr;gap:12px}.card{display:grid;grid-template-columns:112px 1fr;gap:13px;padding:10px;border-radius:20px}.preview{height:150px;margin:0;border-radius:13px}.mock-phone{transform:scale(.68);flex-shrink:0}.info{padding:5px 2px 4px}.tag{font-size:9px;margin-bottom:5px}.card h2{font-size:17px;margin-bottom:5px}.card p{font-size:12px;min-height:0;margin-bottom:10px}.select{padding-top:9px;font-size:12px}.arrow{width:24px;height:24px}.foot{margin-top:18px}}
+</style>
+</head>
+<body>
+<main class="choose" id="chooser">
+ <div class="content">
+  <div class="brand"><span class="brand-icon">♫</span><span>SONORA PLAYER</span></div>
+  <h1>Pilih tampilan musikmu.</h1>
+  <p class="sub">Mau pemutar musik dengan cover album besar atau tampilan waveform minimalis? Pilih salah satu untuk mulai.</p>
+  <div class="cards">
+   <button class="card" onclick="openPlayer('album')" aria-label="Pilih tampilan dengan album">
+    <div class="preview album"><div class="mock-phone"><div class="cover">♫</div><div class="lines"><i></i><i></i></div><div class="progress"></div><div class="controls"><span>‹‹</span><b>Ⅱ</b><span>››</span></div></div></div>
+    <div class="info"><div class="tag">Mode 01 · Artwork</div><h2>Dengan Album</h2><p>Fokus pada cover album, nuansa glass, dan kontrol musik bergaya iPhone.</p><div class="select"><span>Gunakan tampilan ini</span><span class="arrow">↗</span></div></div>
+   </button>
+   <button class="card" onclick="openPlayer('waveform')" aria-label="Pilih tampilan tanpa album">
+    <div class="preview wave"><div class="mock-phone"><div class="cover">♫</div><div class="lines"><i></i><i></i></div><div class="waveform"><i style="--h:8px"></i><i style="--h:15px"></i><i style="--h:23px"></i><i style="--h:12px"></i><i style="--h:27px"></i><i style="--h:18px"></i><i style="--h:31px"></i><i style="--h:14px"></i><i style="--h:24px"></i><i style="--h:10px"></i><i style="--h:29px"></i><i style="--h:18px"></i><i style="--h:12px"></i><i style="--h:25px"></i><i style="--h:15px"></i><i style="--h:8px"></i></div><div class="progress"></div><div class="controls"><span>‹‹</span><b>Ⅱ</b><span>››</span></div></div></div>
+    <div class="info"><div class="tag">Mode 02 · Waveform</div><h2>Tanpa Album</h2><p>Tampilan hitam minimalis dengan waveform di tengah yang bergerak mengikuti musik.</p><div class="select"><span>Gunakan tampilan ini</span><span class="arrow">↗</span></div></div>
+   </button>
+  </div>
+  <div class="foot">Kamu bisa kembali dan mengganti tampilan kapan saja.</div>
+ </div>
+</main>
+<iframe id="player" title="Sonora music player" allow="autoplay"></iframe>
+<div id="homeGesture" role="button" tabindex="0" aria-label="Geser ke atas untuk kembali ke pilihan tampilan"><span class="bar"></span></div>
+<script>
+const chooser=document.getElementById('chooser'), player=document.getElementById('player'), homeGesture=document.getElementById('homeGesture');
+function openPlayer(mode){player.src=mode==='album'?'modes/album.html':'modes/waveform.html';chooser.style.display='none';player.style.display='block';homeGesture.style.display='flex';}
+function backToChooser(){player.src='about:blank';player.style.display='none';homeGesture.style.display='none';chooser.style.display='flex';}
+let touchStartY=null;
+homeGesture.addEventListener('touchstart',e=>{touchStartY=e.touches[0].clientY},{passive:true});
+homeGesture.addEventListener('touchend',e=>{if(touchStartY!==null && touchStartY-e.changedTouches[0].clientY>12)backToChooser();touchStartY=null},{passive:true});
+homeGesture.addEventListener('click',backToChooser);
+homeGesture.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')backToChooser()});
+// Also support the familiar bottom-edge swipe-up gesture on touch screens.
+let edgeStart=null;
+document.addEventListener('touchstart',e=>{if(chooser.style.display==='none' && e.touches[0].clientY>window.innerHeight-55)edgeStart={x:e.touches[0].clientX,y:e.touches[0].clientY}},{passive:true});
+document.addEventListener('touchend',e=>{if(!edgeStart)return;const t=e.changedTouches[0];if(edgeStart.y-t.clientY>65 && Math.abs(edgeStart.x-t.clientX)<100)backToChooser();edgeStart=null},{passive:true});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&chooser.style.display==='none')backToChooser();});
+</script>
+</body>
+</html>
